@@ -1,0 +1,54 @@
+﻿@page "/livros"
+@using Library.Blazor.Domain.Entities
+
+<h1>Livros</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var livro in livros)
+        {
+            <tr>
+                <td>@livro.Titulo</td>
+                <td>@livro.Autor</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private List<Livro> livros = new();
+
+}
+
+
+@* <ul>
+    @foreach (var livro in livros)
+    {
+        <li>
+            <strong>
+                @livro.Titulo
+            </strong> -@livro.Autor
+            (@(livro.Disponivel ? "Disponivel" : "Emprestado"))
+        </li>
+    }
+</ul>
+
+@code {
+    private List<Livro> livros = new();
+
+    protected override void OnInitialized()
+    {
+        livros.Add(new Livro(1, "O Hobbit", "J.R.R. Tolkien"));
+        livros.Add(new Livro(2, "1984", "George Orwell"));
+        livros.Add(new Livro(3, "Fahrenheit 451", "Ray Bradburry"));
+    }
+} *@
