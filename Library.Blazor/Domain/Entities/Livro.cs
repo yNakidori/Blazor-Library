@@ -7,6 +7,8 @@
         public string Autor { get; private set; }
         public bool Disponivel { get; private set; }
 
+        protected Livro() {  }
+
         public Livro(int id, string titulo, string autor)
         {
             Id = id;

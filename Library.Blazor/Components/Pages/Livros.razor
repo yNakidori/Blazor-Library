@@ -1,9 +1,29 @@
 ﻿@page "/livros"
+@rendermode InteractiveServer
 @using Library.Blazor.Domain.Entities
 
 <h1>Livros</h1>
 
-<table>
+<h3>Novo Livro</h3>
+
+<div class="mb-3">
+    <label class="form-label">Título</label>
+    <input class="form-control" @bind="novoTitulo" />
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Autor</label>
+    <input class="form-control" @bind="novoAutor" />
+</div>
+
+<button class="btn btn-success mb-4" @onclick="AdicionarLivro">
+    Adicionar
+</button>
+
+<hr />
+
+
+<table class="table">
     <thead>
         <tr>
             <th>Título</th>
@@ -18,37 +38,54 @@
             <tr>
                 <td>@livro.Titulo</td>
                 <td>@livro.Autor</td>
+                <td>
+                    @(livro.Disponivel ? "Disponível" : "Emprestado")
+                </td>
+                <td>
+                    @if (livro.Disponivel)
+                    {
+                        <button class="btn btn-sm btn-primary"
+                                @onclick="() => Emprestar(livro)">
+                            Emprestar
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-success"
+                                @onclick="() => Devolver(livro)">
+                            Devolver
+                        </button>
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-
     private List<Livro> livros = new();
-
-}
-
-
-@* <ul>
-    @foreach (var livro in livros)
-    {
-        <li>
-            <strong>
-                @livro.Titulo
-            </strong> -@livro.Autor
-            (@(livro.Disponivel ? "Disponivel" : "Emprestado"))
-        </li>
-    }
-</ul>
-
-@code {
-    private List<Livro> livros = new();
+    private string novoTitulo = string.Empty;
+    private string novoAutor = string.Empty;
+    private int proximoId = 1;
 
     protected override void OnInitialized()
     {
-        livros.Add(new Livro(1, "O Hobbit", "J.R.R. Tolkien"));
-        livros.Add(new Livro(2, "1984", "George Orwell"));
-        livros.Add(new Livro(3, "Fahrenheit 451", "Ray Bradburry"));
+        livros.Add(new Livro(proximoId++, "O Hobbit", "J.R.R. Tolkien"));
+        livros.Add(new Livro(proximoId++, "1984", "George Orwell"));
     }
-} *@
+
+    private void AdicionarLivro()
+    {
+        if (string.IsNullOrWhiteSpace(novoTitulo) ||
+        string.IsNullOrWhiteSpace(novoAutor)) return;
+
+        livros.Add(new Livro(proximoId++, novoTitulo, novoAutor));
+
+        novoTitulo = string.Empty;
+        novoAutor = string.Empty;
+    }
+
+    private void Emprestar(Livro livro) => livro.Emprestar();
+
+    private void Devolver(Livro livro) => livro.Devolver();
+}
