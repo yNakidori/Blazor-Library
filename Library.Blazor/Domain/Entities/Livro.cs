@@ -9,10 +9,9 @@
 
         protected Livro() {  }
 
-        public Livro(int id, string titulo, string autor)
+        public Livro(string titulo, string autor)
         {
-            Id = id;
-            Titulo = autor;
+            Titulo = titulo;
             Autor = autor;
             Disponivel = true;
         }
