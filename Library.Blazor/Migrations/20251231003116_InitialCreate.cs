@@ -2,6 +2,8 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Library.Blazor.Migrations
 {
     /// <inheritdoc />
@@ -23,6 +25,16 @@ namespace Library.Blazor.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Livros", x => x.Id);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Livros",
+                columns: new[] { "Id", "Autor", "Disponivel", "Titulo" },
+                values: new object[,]
+                {
+                    { 1, "J.R.R. Tolkien", true, "O Hobbit" },
+                    { 2, "George Orwell", true, "1984" },
+                    { 3, "Ray Bradbury", true, "Fahrenheit 451" }
                 });
         }
 

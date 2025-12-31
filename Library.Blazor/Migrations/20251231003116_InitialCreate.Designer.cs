@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Blazor.Migrations
 {
     [DbContext(typeof(BibliotecaDbContext))]
-    [Migration("20251223024107_InitialCreate")]
+    [Migration("20251231003116_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -46,6 +46,29 @@ namespace Library.Blazor.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Livros");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Autor = "J.R.R. Tolkien",
+                            Disponivel = true,
+                            Titulo = "O Hobbit"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Autor = "George Orwell",
+                            Disponivel = true,
+                            Titulo = "1984"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Autor = "Ray Bradbury",
+                            Disponivel = true,
+                            Titulo = "Fahrenheit 451"
+                        });
                 });
 #pragma warning restore 612, 618
         }

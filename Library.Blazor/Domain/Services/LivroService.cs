@@ -1,36 +1,39 @@
 ﻿using Library.Blazor.Domain.Entities;
-using Library.Blazor.Infrastructure.Repositories;
+using Library.Blazor.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Library.Blazor.Domain.Services;
 
 public class LivroService
 {
-    private readonly ILivroRepository _repository;
+    private readonly BibliotecaDbContext _context;
 
-    public LivroService(ILivroRepository repository)
+
+    public LivroService(BibliotecaDbContext context)
     {
-        _repository = repository;
+        _context = context;
     }
 
-    public Task<List<Livro>> ListarAsync()
-        => _repository.ObterTodosAsync();
+    public async Task<List<Livro>> ObterTodosAsync()
+    {
+        return await _context.Livros.ToListAsync();
+    }
 
-    public Task AdicionarAsync(string titulo, string autor)
+    public async Task AdicionarAsync(string titulo, string autor)
     {
         var livro = new Livro(titulo, autor);
-        return _repository.AdicionarAsync(livro);
+        _context.Livros.Add(livro);
+        await _context.SaveChangesAsync();
     }
 
-    public Task EmprestarAsync(Livro livro)
+    public async Task EmprestarAsync(int id)
     {
+        var livro = await _context.Livros.FindAsync(id);
+        if (livro == null) return;
+
         livro.Emprestar();
-        return _repository.AdicionarAsync(livro);
-    }
-
-    public Task DevolverAsync(Livro livro)
-    {
-        livro.Devolver();
-        return _repository.AtualizarAsync(livro);
+        await _context.SaveChangesAsync();
     }
 
 }
