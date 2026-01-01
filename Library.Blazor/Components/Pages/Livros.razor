@@ -1,5 +1,6 @@
 ﻿@page "/livros"
 @rendermode InteractiveServer
+@using Library.Blazor.Application.DTOs.Livros;
 @using Library.Blazor.Domain.Services
 @using Library.Blazor.Domain.Entities
 @inject LivroService LivroService
@@ -35,7 +36,13 @@
 
     private async Task AdicionarLivro()
     {
-        await LivroService.AdicionarAsync("Novo Livro", "Autor X");
+        var dto = new CriarLivroDto
+        {
+            Titulo = "Novo Livro",
+            Autor = "Autor X"
+        };
+
+        await LivroService.AdicionarAsync(dto);
         livros = await LivroService.ObterTodosAsync();
     }
 
