@@ -1,0 +1,41 @@
+﻿.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #111827;
+}
+
+.page-subtitle {
+    color: #6b7280;
+    font-size: 1.05rem;
+}
+
+.book-card {
+    border: none;
+    border-radius: 18px;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+    .book-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.08);
+    }
+
+.favorite-btn {
+    font-size: 1.2rem;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.book-status {
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: .75rem;
+}
+
+.add-book-btn{
+    border-radius: 14px;
+    font-weight: 600;
+    padding: 12px 22px;
+}
