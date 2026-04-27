@@ -1,5 +1,7 @@
 using Library.Blazor.Components;
 using Library.Blazor.Domain.Services;
+using Library.Blazor.Domain.Interfaces;
+using Library.Blazor.Infrastructure.Repositories;
 using Library.Blazor.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +14,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<BibliotecaDbContext>(options => 
 options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 
 builder.Services.AddScoped<LivroService>();
 

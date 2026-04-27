@@ -1,4 +1,5 @@
 ﻿using Library.Blazor.Domain.Entities;
+using Library.Blazor.Domain.Interfaces;
 using Library.Blazor.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,16 +1,61 @@
 ﻿@page "/livros"
 @rendermode InteractiveServer
-@using Library.Blazor.Application.DTOs.Livros;
-@using Library.Blazor.Domain.Services
+@using Library.Blazor.Application.DTOs.Livros
 @using Library.Blazor.Domain.Entities
+@using Library.Blazor.Domain.Services
 @inject LivroService LivroService
 
-<h3>Livros</h3>
+<div class="container py-5">
 
-<button @onclick="AdicionarLivro">Adicionar Livro</button>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold">Minha Biblioteca</h1>
+            <p class="text-muted mb-0">Organize sua coleção pessoal</p>
+        </div>
+
+        <button class="btn btn-dark px-4" @onclick="AdicionarLivro">
+            + Novo Livro
+        </button>
+    </div>
+
+    @if (livros.Count == 0)
+    {
+        <div class="text-center border rounded p-5 bg-light">
+            <h4>Sua biblioteca está vazia</h4>
+            <p class="text-muted">Adicione seu primeiro livro para começar.</p>
+        </div>
+    } else
+    {
+        <div class="row g-4">
+            @foreach (var livro in livros)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm border rounded-4 h-100">
+
+                        <h5 class="fw-bold">@livro.Titulo</h5>
+                        <p class="text-muted mb-2">@livro.Autor</p>
+
+                        <span class="badge bg-secondary">
+                            @livro.StatusLeitura
+                        </span>
+
+                        @if (livro.Favorito)
+                        {
+                            <div class="mt-3">⭐ Favorito</div>
+                        }
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
 
 @code {
-    private List<Livro> livros = new List<Livro>();
+    private List<Livro> livros = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -19,13 +64,12 @@
 
     private async Task AdicionarLivro()
     {
-        var dto = new CriarLivroDto
-        {
-            Titulo = "Novo Livro",
-            Autor = "Autor X"
-        };
+        await LivroService.AdicionarAsync(new CriarLivroDto
+            {
+                Titulo = "Novo Livro",
+                Autor = "Autor X"
+            });
 
-        await LivroService.AdicionarAsync(dto);
         livros = await LivroService.ObterTodosAsync();
     }
 
