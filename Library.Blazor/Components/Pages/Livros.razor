@@ -9,23 +9,6 @@
 
 <button @onclick="AdicionarLivro">Adicionar Livro</button>
 
-<ul>
-    @foreach (var livro in livros)
-    {
-        <li>
-            @livro.Titulo - @livro.Autor
-            @if (livro.Disponivel)
-            {
-                <button @onclick="() => Emprestar(livro.Id)">Emprestar</button>
-            }
-            else
-            {
-                <span>(Emprestado)</span>
-            }
-        </li>
-    }
-</ul>
-
 @code {
     private List<Livro> livros = new List<Livro>();
 
@@ -46,9 +29,4 @@
         livros = await LivroService.ObterTodosAsync();
     }
 
-    private async Task Emprestar(int id)
-    {
-        await LivroService.EmprestarAsync(id);
-        livros = await LivroService.ObterTodosAsync();
-    }
 }
