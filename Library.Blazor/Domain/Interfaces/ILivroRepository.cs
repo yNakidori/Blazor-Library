@@ -8,6 +8,7 @@ namespace Library.Blazor.Domain.Interfaces
         Task<List<Livro>> ObterTodosAsync();
         Task<Livro?> ObterPorIdAsync(int id);
         // Comandos
+        Task<Livro?> ObterParaEdicaoAsync(int id);
         Task AdicionarAsync(Livro livro);
         Task AtualizarAsync(Livro livro);
         Task RemoverAsync(Livro livro);

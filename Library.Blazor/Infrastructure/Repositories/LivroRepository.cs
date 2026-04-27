@@ -20,9 +20,16 @@ public class LivroRepository : ILivroRepository
         return await _context.Livros.AsNoTracking().ToListAsync();
     }
 
+    //Read-only
     public async Task<Livro?> ObterPorIdAsync(int id)
     {
         return await _context.Livros.AsNoTracking().FirstOrDefaultAsync(livro => livro.Id == id);
+    }
+
+    //Manipulção
+    public async Task<Livro?> ObterParaEdicaoAsync(int id)
+    {
+        return await _context.Livros.FirstOrDefaultAsync(livro => livro.Id == id);
     }
 
     public async Task  AdicionarAsync(Livro livro)

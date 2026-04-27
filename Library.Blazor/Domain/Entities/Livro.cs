@@ -38,9 +38,14 @@ namespace Library.Blazor.Domain.Entities
             Autor = autor.Trim();
         }
 
-        public void MarcarFavorito() => Favorito = true;
+        //public void MarcarFavorito() => Favorito = true;
 
-        public void RemoverFAvorito() => Favorito = false;
+        //public void RemoverFAvorito() => Favorito = false;
+
+        public void AlternarFavorito()
+        {
+            Favorito = !Favorito;
+        }
 
         public void AlterarStatus(StatusLeitura status) => StatusLeitura = status;
 

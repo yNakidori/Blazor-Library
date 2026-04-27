@@ -27,6 +27,11 @@ public class LivroService
         return await repository.ObterTodosAsync();
     }
 
+    public async Task<Livro?> ObterParaEdicaoAsync(int id)
+    {
+        return await repository.ObterParaEdicaoAsync(id);
+    }
+
     // Update (editar)
     //public async Task AtualizarAsync(AtualizarLivroDto dto)
     //{
@@ -44,6 +49,15 @@ public class LivroService
         if (livro == null) return;
 
         await repository.RemoverAsync(livro);
+    }
+
+    public async Task AlternarFavoritoAsync(int id)
+    {
+        var livro = await repository.ObterParaEdicaoAsync(id);
+        if (livro == null) return;
+
+        livro.AlternarFavorito();
+        await repository.AtualizarAsync(livro);
     }
 
 }
