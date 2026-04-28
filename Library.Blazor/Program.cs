@@ -4,6 +4,7 @@ using Library.Blazor.Domain.Interfaces;
 using Library.Blazor.Infrastructure.Repositories;
 using Library.Blazor.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Library.Blazor.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ options.UseSqlServer(
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 
 builder.Services.AddScoped<LivroService>();
+
+builder.Services.AddScoped<OpenLibraryService>();
+builder.Services.AddScoped(sp => new HttpClient());
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
 ﻿namespace Library.Blazor.Application.DTOs.Livros
 {
-    public class CriarLivroDto
+    public class LivroMetadataDto
     {
         public string Titulo { get; set; } = "";
         public string Autor { get; set; } = "";
@@ -10,3 +10,4 @@
         public string CapaUrl { get; set; } = "";
     }
 }
+

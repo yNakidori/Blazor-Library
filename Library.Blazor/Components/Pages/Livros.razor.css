@@ -1,4 +1,8 @@
-﻿.page-title {
+﻿body {
+    background: #6b7280;
+}
+
+.page-title {
     font-size: 3rem;
     font-weight: 800;
     color: #111827;
@@ -12,8 +16,9 @@
 .book-card {
     border: none;
     border-radius: 18px;
-    transition: all 0.2s ease;
-    background: white;
+    background: #ffffff;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,.04);
 }
 
     .book-card:hover {
@@ -22,11 +27,19 @@
     }
 
 .favorite-btn {
-    font-size: 1.2rem;
     border: none;
     background: transparent;
-    padding: 0;
+    font-size: 1.25rem;
+    color: #6c757d;
 }
+
+    .favorite-btn:hover {
+        transform: scale(1.08);
+    }
+
+    .favorite-btn.active {
+        color: #ffc107;
+    }
 
 .book-status {
     border-radius: 999px;
@@ -38,4 +51,148 @@
     border-radius: 14px;
     font-weight: 600;
     padding: 12px 22px;
+}
+
+    .add-book-btn:hover {
+        transform: translateY(-1px);
+    }
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 260px;
+    overflow: auto;
+}
+
+.result-card {
+    text-align: left;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 14px;
+    background: #2b3648;
+    color: white;
+    transition: .15s ease;
+}
+
+    .result-card:hover {
+        background: #3b4960;
+        transform: translateY(-1px);
+    }
+
+/*Modal*/
+
+.modal-backdrop-custom {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.modal-custom {
+    width: 100%;
+    max-width: 950px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 25px 60px rgba(0,0,0,.22);
+    overflow: hidden;
+    animation: fadeUp .18s ease;
+}
+
+.modal-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-body-custom {
+    padding: 22px;
+}
+
+.cover-placeholder {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 14px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/*Tema Escuro*/
+
+.dark-mode {
+    background: #111827;
+    color: #f9fafb;
+    border-radius: 24px;
+    padding: 32px;
+}
+
+    .dark-mode .page-title {
+        color: #f9fafb;
+    }
+
+    .dark-mode .page-subtitle {
+        color: #9ca3af;
+    }
+
+    .dark-mode .book-card {
+        background: #1f2937;
+        color: #f9fafb;
+        box-shadow: 0 8px 20px rgba(0,0,0,.35);
+    }
+
+    .dark-mode .text-muted {
+        color: #9ca3af !important;
+    }
+
+    .dark-mode .form-control {
+        background: #111827;
+        border-color: #374151;
+        color: white;
+    }
+
+        .dark-mode .form-control:focus {
+            background: #111827;
+            color: white;
+        }
+
+    .dark-mode .btn-outline-secondary {
+        color: #e5e7eb;
+        border-color: #4b5563;
+    }
+
+    .dark-mode .modal-custom {
+        background: #1f2937;
+        color: #fff;
+    }
+
+    .dark-mode .modal-header-custom {
+        border-color: #374151;
+    }
+
+    .dark-mode .cover-placeholder {
+        background: #374151;
+        color: #d1d5db;
+    }
+
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to{
+        opacity: 1;
+        transform:translateY(0);
+    }
 }
