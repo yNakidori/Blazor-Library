@@ -70,16 +70,17 @@ namespace Library.Blazor.Infrastructure.Services
                 ? t.GetString() ?? ""
                 : "";
 
-            string descricao = "";
+            string descricao = "Sem descrição disponível, você ainda pode incluir uma descrição manualmente se quiser";
+
 
             if (root.TryGetProperty("description", out var d))
             {
                 if (d.ValueKind == JsonValueKind.String)
-                    descricao = d.GetString() ?? "";
+                    descricao = d.GetString() ?? descricao;
 
                 else if (d.ValueKind == JsonValueKind.Object &&
-                    d.TryGetProperty("value", out var val))
-                    descricao = val.GetString() ?? "";
+                         d.TryGetProperty("value", out var val))
+                    descricao = val.GetString() ?? descricao;
             }
 
             string idioma = "";

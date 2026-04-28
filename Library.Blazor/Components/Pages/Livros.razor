@@ -73,10 +73,28 @@
                                         <InputText class="form-control"
                                                    @bind-Value="novoLivro.Titulo" />
 
+                                        @if (!string.IsNullOrWhiteSpace(mensagemBusca))
+                                        {
+                                            <div class="small text-muted mt-2">
+                                                @mensagemBusca
+                                            </div>
+                                        }
+
                                         <button type="button"
                                                 class="btn btn-outline-primary"
-                                                @onclick="BuscarMetadata">
-                                            Buscar
+                                                @onclick="BuscarMetadata"
+                                                disabled="@buscando">
+
+                                            @if (buscando)
+                                            {
+                                                <span class="spinner-border spinner-border-sm me-2"></span>
+                                                <span>Buscando...</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Buscar</span>
+                                            }
+
                                         </button>
                                     </div>
 
@@ -88,12 +106,24 @@
                                             {
                                                 <button type="button"
                                                         class="result-card"
+                                                        disabled="@aplicandoResultado"
                                                         @onclick="() => SelecionarResultado(item)">
 
                                                     <strong>@item.Titulo</strong><br />
                                                     <small>@item.Autor (@item.Ano)</small>
 
                                                 </button>
+
+                                                @if (aplicandoResultado && itemSelecionadoKey == item.Key)
+                                                {
+                                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                                    <span>Aplicando...</span>
+                                                }
+                                                else
+                                                {
+                                                    <strong>@item.Titulo</strong><br />
+                                                    <small>@item.Autor (@item.Ano)</small>
+                                                }
                                             }
 
                                         </div>
@@ -216,6 +246,12 @@
         modoEscuro = !modoEscuro;
     }
 
+    private bool buscando = false;
+    private string mensagemBusca = "";
+
+    private bool aplicandoResultado = false;
+    private string? itemSelecionadoKey = null;
+
     private List<Livro> livros = new();
 
     private List<LivroBuscaDto> resultadosBusca = new();
@@ -273,29 +309,61 @@
         if (string.IsNullOrWhiteSpace(novoLivro.Titulo))
             return;
 
-        resultadosBusca =
+        buscando = true;
+        mensagemBusca = "Buscando as informações do seu livro...";
+
+        try
+        {
+            resultadosBusca =
             await OpenLibraryService.BuscarMultiplosAsync(novoLivro.Titulo);
+
+            mensagemBusca =
+            resultadosBusca.Any()
+             ? $"{resultadosBusca.Count} resultado(s) encontrado(s)."
+            : "Nenhum resultado encontrado.";
+        }
+        catch
+        {
+            mensagemBusca = "Erro ao buscar dados.";
+        }
+        finally
+        {
+            buscando = false;
+        }
     }
 
     private async Task SelecionarResultado(LivroBuscaDto item)
     {
-        var dados =
-            await OpenLibraryService.BuscarDetalhesAsync(item.Key);
+        aplicandoResultado = true;
+        itemSelecionadoKey = item.Key;
+        mensagemBusca = "Aplicando os dados do livro selecionado..."; 
 
-        if (dados == null)
-            return;
+        try
+        {
+            var dados =
+                await OpenLibraryService.BuscarDetalhesAsync(item.Key);
 
-        novoLivro.Titulo = item.Titulo;
-        novoLivro.Autor = item.Autor;
+            novoLivro.Titulo = item.Titulo;
+            novoLivro.Autor = item.Autor;
+            novoLivro.CapaUrl = item.CapaUrl;
 
-        novoLivro.Descricao = dados.Descricao;
-        novoLivro.Idioma = dados.Idioma;
-        novoLivro.DataPublicacao =
-            dados.DataPublicacao;
+            if (dados != null)
+            {
+                novoLivro.Descricao = dados.Descricao;
+                novoLivro.Idioma = dados.Idioma;
+                novoLivro.DataPublicacao = dados.DataPublicacao;
+            }
 
-        capaPreview = item.CapaUrl;
+            capaPreview = item.CapaUrl;
 
-        resultadosBusca.Clear();
+            resultadosBusca.Clear();
+
+            mensagemBusca = "Dados aplicados com sucesso!";
+        } finally
+        {
+            aplicandoResultado = false;
+            itemSelecionadoKey = null;
+        }
     }
 
     // private async Task BuscarMetadata()
