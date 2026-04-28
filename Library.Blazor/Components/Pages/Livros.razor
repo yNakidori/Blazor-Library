@@ -62,6 +62,16 @@
                                     </div>
                                 }
 
+                                <InputFile OnChange="UploadCapa"
+                                           accept=".jpg,.jpeg,.png,.webp"
+                                           class="form-control mt-3" />
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger w-100 mt-2"
+                                        @onclick="RemoverCapa">
+                                    Remover Capa
+                                </button>
+
                             </div>
 
                             <div class="col-md-8">
@@ -72,13 +82,6 @@
                                     <div class="d-flex gap-2">
                                         <InputText class="form-control"
                                                    @bind-Value="novoLivro.Titulo" />
-
-                                        @if (!string.IsNullOrWhiteSpace(mensagemBusca))
-                                        {
-                                            <div class="small text-muted mt-2">
-                                                @mensagemBusca
-                                            </div>
-                                        }
 
                                         <button type="button"
                                                 class="btn btn-outline-primary"
@@ -98,9 +101,16 @@
                                         </button>
                                     </div>
 
+                                    @if (!string.IsNullOrWhiteSpace(mensagemBusca))
+                                    {
+                                        <div class="small text-muted mt-2">
+                                            @mensagemBusca
+                                        </div>
+                                    }
+
                                     @if (resultadosBusca.Any())
                                     {
-                                        <div class="search-results mt-2">
+                                        <div class="search-results mt-3">
 
                                             @foreach (var item in resultadosBusca)
                                             {
@@ -109,21 +119,19 @@
                                                         disabled="@aplicandoResultado"
                                                         @onclick="() => SelecionarResultado(item)">
 
-                                                    <strong>@item.Titulo</strong><br />
-                                                    <small>@item.Autor (@item.Ano)</small>
+                                                    @if (aplicandoResultado &&
+                                                         itemSelecionadoKey == item.Key)
+                                                    {
+                                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                                        <span>Aplicando...</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <strong>@item.Titulo</strong><br />
+                                                        <small>@item.Autor (@item.Ano)</small>
+                                                    }
 
                                                 </button>
-
-                                                @if (aplicandoResultado && itemSelecionadoKey == item.Key)
-                                                {
-                                                    <span class="spinner-border spinner-border-sm me-2"></span>
-                                                    <span>Aplicando...</span>
-                                                }
-                                                else
-                                                {
-                                                    <strong>@item.Titulo</strong><br />
-                                                    <small>@item.Autor (@item.Ano)</small>
-                                                }
                                             }
 
                                         </div>
@@ -366,23 +374,34 @@
         }
     }
 
-    // private async Task BuscarMetadata()
-    // {
-    //     if (string.IsNullOrWhiteSpace(novoLivro.Titulo))
-    //         return;
+    private async Task UploadCapa(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
 
-    //     var dados =
-    //         await OpenLibraryService.BuscarPorTituloAsync(novoLivro.Titulo);
+        if (file == null)
+            return;
 
-    //     if (dados == null)
-    //         return;
+        var nome = 
+            $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
 
-    //         capaPreview = dados.CapaUrl;
-    //         novoLivro.Titulo = dados.Titulo;
-    //         novoLivro.Autor = dados.Autor;
-    //         novoLivro.Descricao = dados.Descricao;
-    //         novoLivro.DataPublicacao = dados.DataPublicacao;
-    //         novoLivro.Idioma = dados.Idioma;
-    // }
+        var pasta = Path.Combine(Environment.CurrentDirectory, "wwwroot", "uploads", "capas");
 
+        Directory.CreateDirectory(pasta);
+
+        var caminho = Path.Combine(pasta, nome);
+        await using var stream = file.OpenReadStream(5 * 1024 * 1024);
+
+        await using var fs = new FileStream(caminho, FileMode.Create);
+
+        await stream.CopyToAsync(fs);
+
+        capaPreview = $"/uploads/capas/{nome}";
+        novoLivro.CapaUrl = capaPreview;
+    }
+
+    private void RemoverCapa()
+    {
+        capaPreview = "";
+        novoLivro.CapaUrl = "";
+    }
 }

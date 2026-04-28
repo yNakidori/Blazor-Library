@@ -38,10 +38,6 @@ namespace Library.Blazor.Domain.Entities
             Autor = autor.Trim();
         }
 
-        //public void MarcarFavorito() => Favorito = true;
-
-        //public void RemoverFAvorito() => Favorito = false;
-
         public void AlternarFavorito()
         {
             Favorito = !Favorito;
@@ -51,27 +47,25 @@ namespace Library.Blazor.Domain.Entities
 
         public void AdicionarNota(string nota) => NotaPessoal = nota;
 
-        // Esse trecho abaixo seria a forma tradicional de escrever os métodos, mas como eles são simples, podemos usar a sintaxe de expressão para deixá-los mais concisos e legíveis. (expression-bodied) 
 
-        //public void MarcarFavorito()
-        //{
-        //    Favorito = true;
-        //}
+        public void DefinirCapa(string? capaUrl)
+        {
+            CapaUrl = capaUrl;
+        }
 
-        //public void RemoverFavorito()
-        //{
-        //    Favorito = false;
-        //}
+        public void DefinirDescricao(string? descricao)
+        {
+            Descricao = descricao;
+        }
 
-        //public void AlterarStatus(StatusLeitura status)
-        //{
-        //    StatusLeitura = status;
-        //}
+        public void DefinirIdioma(string idioma)
+        {
+            Idioma = idioma;
+        }
 
-        //public void AdicionarNota(string nota)
-        //{
-        //    NotaPessoal = nota;
-        //}
-
+        public void DefinirDataPublicacao(DateOnly? data)
+        {
+            DataPublicacao = data;
+        }
     }
 }

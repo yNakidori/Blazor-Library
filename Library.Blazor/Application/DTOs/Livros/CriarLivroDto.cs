@@ -7,6 +7,6 @@
         public string Descricao { get; set; } = "";
         public string Idioma { get; set; } = "";
         public DateOnly? DataPublicacao { get; set; }
-        public string CapaUrl { get; set; } = "";
+        public string? CapaUrl { get; set; }
     }
 }

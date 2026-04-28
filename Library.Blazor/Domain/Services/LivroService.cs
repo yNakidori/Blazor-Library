@@ -18,6 +18,12 @@ public class LivroService
     public async Task AdicionarAsync(CriarLivroDto dto)
     {
         var livro = new Livro(dto.Titulo, dto.Autor);
+
+        livro.DefinirCapa(dto.CapaUrl);
+        livro.DefinirDescricao(dto.Descricao);
+        livro.DefinirIdioma(dto.Idioma);
+        livro.DefinirDataPublicacao(dto.DataPublicacao);
+
         await repository.AdicionarAsync(livro);
     }
 
@@ -59,5 +65,4 @@ public class LivroService
         livro.AlternarFavorito();
         await repository.AtualizarAsync(livro);
     }
-
 }
