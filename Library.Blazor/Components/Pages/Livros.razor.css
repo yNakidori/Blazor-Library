@@ -128,6 +128,25 @@
     font-weight: 600;
 }
 
+.book-cover {
+    width: 100%;
+    aspect-ratio:2/3;
+    object-fit:cover;
+    border-radius: 14px;
+}
+
+.book-cover-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: #e5e7eb;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 600;
+}
+
 /*Tema Escuro*/
 
 .dark-mode {
@@ -181,6 +200,11 @@
     }
 
     .dark-mode .cover-placeholder {
+        background: #374151;
+        color: #d1d5db;
+    }
+
+    .dark-mode .book-cover-placeholder {
         background: #374151;
         color: #d1d5db;
     }
