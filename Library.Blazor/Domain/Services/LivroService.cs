@@ -57,6 +57,18 @@ public class LivroService
         await repository.AtualizarAsync(livro);
     }
 
+    public async Task DefinirArquivoAsync(int id, string url, string tipo, long tamanho)
+    {
+        var livro = await repository.ObterParaEdicaoAsync(id);
+
+        if (livro == null)
+            return;
+
+        livro.DefinirArquivo(url, tipo, tamanho);
+
+        await repository.AdicionarAsync(livro);
+    }
+
     // Delete
     public async Task RemoverAsync(int id)
     {

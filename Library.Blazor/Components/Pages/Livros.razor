@@ -72,6 +72,7 @@
                                     Remover Capa
                                 </button>
 
+
                             </div>
 
                             <div class="col-md-8">
@@ -167,6 +168,28 @@
                                                    @bind-Value="novoLivro.Descricao" />
                                 </div>
 
+                                @if (modoEdicao)
+                                {
+                                    <div class="mt-3">
+
+                                        <label class="form-label">
+                                            Arquivo do Livro
+                                        </label>
+
+                                        <InputFile OnChange="UploadArquivoLivro"
+                                                   accept=".epub,.pdf,.mobi,.azw3"
+                                                   class="form-control" />
+
+                                        @if (!string.IsNullOrWhiteSpace(arquivoNome))
+                                        {
+                                            <div class="small text-muted mt-2">
+                                                Arquivo atual: @arquivoNome
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                                
                                 <div class="d-flex justify-content-end gap-2">
                                     <button type="button"
                                             class="btn btn-outline-secondary"
@@ -222,6 +245,7 @@
                                 </div>
                             }
 
+                           
                             <div class="book-title">@livro.Titulo</div>
 
                             <p class="text-muted mb-3">
@@ -251,9 +275,21 @@
 
                                 </button>
 
-                                <button class="bi bi-tools btn btn-sm btn-outline-light"
+                                <button class="btn btn-sm btn-outline-light me-2"
                                         @onclick="() => EditarLivro(livro)">
                                     Editar
+                                </button>
+
+                                @if (!string.IsNullOrWhiteSpace(livro.ArquivoUrl))
+                                {
+                                    <a href="/livros/ler/@livro.Id"
+                                       class="btn btn-sm btn-outline-light me-2">
+                                        Ler
+                                    </a>
+                                }
+
+                                <button class="btn btn-sm btn-outline-light">
+                                    e-Reader
                                 </button>
                             </div>
 
@@ -297,6 +333,9 @@
 
     private CriarLivroDto novoLivro = new();
 
+    private string arquivoNome = "";
+    private string mensagemArquivo = "";
+
     protected override async Task OnInitializedAsync()
     {
         livros = await LivroService.ObterTodosAsync();
@@ -312,8 +351,15 @@
         mostrarFormulario = false;
         modoEdicao = false;
         livroEditandoId = 0;
+
         novoLivro = new CriarLivroDto();
+
         capaPreview = "";
+        arquivoNome = "";
+        mensagemArquivo = "";
+        mensagemBusca = "";
+
+        resultadosBusca.Clear();
     }
 
     private void CancelarFormulario()
@@ -321,6 +367,8 @@
         mostrarFormulario = false;
         novoLivro = new CriarLivroDto();
         capaPreview = "";
+
+        FecharModal();
     }
 
     private async Task SalvarLivro()
@@ -471,7 +519,51 @@
                 CapaUrl = livro.CapaUrl
             };
 
-            capaPreview = livro.CapaUrl;
+        capaPreview = livro.CapaUrl;
 
+        arquivoNome = string.IsNullOrWhiteSpace(livro.ArquivoUrl)
+        ? ""
+        : Path.GetFileName(livro.ArquivoUrl);
+    }
+
+    private async Task UploadArquivoLivro(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file == null)
+            return;
+
+        var extensao = Path.GetExtension(file.Name);
+
+        var nome = $"{Guid.NewGuid()}{extensao}";
+
+        var pasta = Path.Combine(
+            Environment.CurrentDirectory,
+            "wwwroot",
+            "uploads",
+            "books"
+        );
+
+        Directory.CreateDirectory(pasta);
+
+        var caminhoCompleto = Path.Combine(pasta, nome);
+
+        await using var stream = file.OpenReadStream(50 * 1024 * 1024);
+
+        await using var fs = new FileStream(caminhoCompleto, FileMode.Create);
+
+        await stream.CopyToAsync(fs);
+
+        await LivroService.DefinirArquivoAsync(
+        livroEditandoId,
+        $"/uploads/books/{nome}",
+        extensao,
+        file.Size);
+
+        arquivoNome = file.Name;
+
+        livros = await LivroService.ObterTodosAsync();
+
+        mensagemArquivo = "Arquivo anexado com sucesso.";
     }
 }

@@ -1,0 +1,72 @@
+﻿.reader-shell {
+    height: calc(100vh - 40px);
+    margin: 20px;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #020617;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.reader-header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    background: #0f172a;
+}
+
+.reader-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.back-btn {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+}
+
+    .back-btn:hover {
+        background: rgba(255,255,255,.05);
+    }
+
+.reader-title {
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.reader-author {
+    color: #94a3b8;
+    font-size: .9rem;
+}
+
+.reader-btn {
+    color: white;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: #1e293b;
+}
+
+.reader-content {
+    flex: 1;
+    margin: 12px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.reader-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}

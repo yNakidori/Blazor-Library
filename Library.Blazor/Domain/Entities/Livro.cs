@@ -81,11 +81,11 @@ namespace Library.Blazor.Domain.Entities
             DataPublicacao = data;
         }
 
-        public void DefinirArquivo(string caminho, string tipo, long tamanho)
+        public void DefinirArquivo(string arquivoUrl, string tipoArquivo, long tamanhoArquivo)
         {
-            ArquivoUrl = caminho;
-            TipoArquivo = tipo;
-            TamanhoArquivo = tamanho;
+            ArquivoUrl = arquivoUrl;
+            TipoArquivo = tipoArquivo;
+            TamanhoArquivo = tamanhoArquivo;
         }
     }
 }
