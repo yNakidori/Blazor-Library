@@ -16,9 +16,9 @@
 .book-card {
     border: none;
     border-radius: 18px;
-    background: #ffffff;
-    transition: transform .2s ease, box-shadow .2s ease;
-    box-shadow: 0 6px 16px rgba(0,0,0,.04);
+    background: #1f2937;
+    padding: 0;
+    overflow: hidden;
 }
 
     .book-card:hover {
@@ -81,6 +81,73 @@
         transform: translateY(-1px);
     }
 
+.cover-placeholder {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 14px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.book-cover {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.book-cover-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: #e5e7eb;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.book-card .card-body {
+    padding: 12px;
+}
+
+.book-info {
+    padding: 14px;
+}
+
+.book-title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    min-height: 38px;
+}
+
+.book-author {
+    font-size: .85rem;
+    opacity: .75;
+    margin-bottom: 10px;
+}
+
+.book-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.remove-btn {
+    width: 100%;
+}
+
+.book-status {
+    text-align: center;
+}
+
 /*Modal*/
 
 .modal-backdrop-custom {
@@ -114,37 +181,6 @@
 
 .modal-body-custom {
     padding: 22px;
-}
-
-.cover-placeholder {
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    border-radius: 14px;
-    background: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    font-weight: 600;
-}
-
-.book-cover {
-    width: 100%;
-    aspect-ratio:2/3;
-    object-fit:cover;
-    border-radius: 14px;
-}
-
-.book-cover-placeholder {
-    width: 100%;
-    aspect-ratio: 2/3;
-    background: #e5e7eb;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    font-weight: 600;
 }
 
 /*Tema Escuro*/
