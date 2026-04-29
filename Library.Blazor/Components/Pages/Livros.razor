@@ -33,7 +33,7 @@
                  @onclick:stopPropagation="true">
 
                 <div class="modal-header-custom">
-                    <h4 class="mb-0">Adicionar Livro</h4>
+                    <h4 class="mb-0">@(modoEdicao ? "Editar Livro" : "Adicionar Livro")</h4>
 
                     <button class="btn-close"
                             @onclick="CancelarFormulario">
@@ -176,7 +176,7 @@
 
                                     <button type="submit"
                                             class="btn btn-success">
-                                        Salvar
+                                        @(modoEdicao ? "Salvar Alterações" : "Salvar")
                                     </button>
                                 </div>
 
@@ -250,6 +250,11 @@
                                     @(livro.Favorito ? "⭐" : "☆")
 
                                 </button>
+
+                                <button class="bi bi-tools btn btn-sm btn-outline-light"
+                                        @onclick="() => EditarLivro(livro)">
+                                    Editar
+                                </button>
                             </div>
 
                         </div>
@@ -279,6 +284,9 @@
     private bool aplicandoResultado = false;
     private string? itemSelecionadoKey = null;
 
+    private bool modoEdicao = false;
+    private int livroEditandoId = 0;
+
     private List<Livro> livros = new();
 
     private List<LivroBuscaDto> resultadosBusca = new();
@@ -299,6 +307,15 @@
         mostrarFormulario = true;
     }
 
+    private void FecharModal()
+    {
+        mostrarFormulario = false;
+        modoEdicao = false;
+        livroEditandoId = 0;
+        novoLivro = new CriarLivroDto();
+        capaPreview = "";
+    }
+
     private void CancelarFormulario()
     {
         mostrarFormulario = false;
@@ -308,15 +325,28 @@
 
     private async Task SalvarLivro()
     {
-        await LivroService.AdicionarAsync(novoLivro);
+        if (modoEdicao)
+        {
+            await LivroService.AtualizarAsync(
+                new AtualizarLivroDto
+                {
+                    Id = livroEditandoId,
+                    Titulo = novoLivro.Titulo,
+                    Autor = novoLivro.Autor,
+                    Descricao = novoLivro.Descricao,
+                    Idioma = novoLivro.Idioma,
+                    DataPublicacao = novoLivro.DataPublicacao,
+                    CapaUrl = novoLivro.CapaUrl
+                });
+        }
+        else
+        {
+            await LivroService.AdicionarAsync(novoLivro);
+        }
 
         livros = await LivroService.ObterTodosAsync();
 
-        novoLivro = new CriarLivroDto();
-
-        mostrarFormulario = false;
-
-        capaPreview = "";
+        FecharModal();
     }
 
     private async Task RemoverLivro(int id)
@@ -422,5 +452,26 @@
     {
         capaPreview = "";
         novoLivro.CapaUrl = "";
+    }
+
+    private void EditarLivro(Livro livro)
+    {
+        modoEdicao = true;
+        mostrarFormulario = true;
+
+        livroEditandoId = livro.Id;
+
+        novoLivro = new CriarLivroDto
+            {
+                Titulo = livro.Titulo,
+                Autor = livro.Autor,
+                Descricao = livro.Descricao,
+                Idioma = livro.Idioma,
+                DataPublicacao = livro.DataPublicacao,
+                CapaUrl = livro.CapaUrl
+            };
+
+            capaPreview = livro.CapaUrl;
+
     }
 }

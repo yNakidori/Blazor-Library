@@ -1,6 +1,7 @@
 ﻿using Library.Blazor.Domain.Entities;
 using Library.Blazor.Domain.Interfaces;
 using Library.Blazor.Application.DTOs.Livros;
+using Microsoft.Identity.Client;
 
 namespace Library.Blazor.Domain.Services;
 
@@ -38,15 +39,23 @@ public class LivroService
         return await repository.ObterParaEdicaoAsync(id);
     }
 
-    // Update (editar)
-    //public async Task AtualizarAsync(AtualizarLivroDto dto)
-    //{
-    //    var livro = await _context.Livros.FindAsync(dto.Id);
-    //    if (livro == null) return;
+    //Update(editar)
+    public async Task AtualizarAsync(AtualizarLivroDto dto)
+    {
+        var livro = await repository.ObterParaEdicaoAsync(dto.Id);
+        if (livro == null) return;
 
-    //    livro.AtualizarDados(dto.Titulo, dto.Autor);
-    //    await _context.SaveChangesAsync();
-    //}
+        livro.AtualizarDados(
+            dto.Titulo,
+            dto.Autor,
+            dto.Descricao,
+            dto.Idioma,
+            dto.DataPublicacao,
+            dto.CapaUrl
+            );
+
+        await repository.AtualizarAsync(livro);
+    }
 
     // Delete
     public async Task RemoverAsync(int id)
