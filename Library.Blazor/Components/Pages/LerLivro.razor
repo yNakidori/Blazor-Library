@@ -1,6 +1,8 @@
 ﻿@page "/livros/ler/{Id:int}"
 @rendermode InteractiveServer
 
+@implements IDisposable
+
 @using Library.Blazor.Domain.Entities
 @using Library.Blazor.Domain.Services
 @inject LivroService LivroService
@@ -12,7 +14,7 @@
 {
     <div class="reader-shell">
 
-        <header class="reader-header">
+        <header class="reader-header @(mostrarHeader ? "show-header" : "hide-header")">
 
             <div class="reader-left">
 
@@ -66,6 +68,10 @@
 
     private Livro? livro;
 
+    private bool mostrarHeader = true;
+
+    private DotNetObjectReference<LerLivro>? objRef;
+
     protected override async Task OnInitializedAsync()
     {
         livro = await LivroService.ObterParaEdicaoAsync(Id);
@@ -73,11 +79,47 @@
 
     private void VoltarBiblioteca()
     {
-        Nav.NavigateTo("livros");
+        Nav.NavigateTo("/livros");
     }
 
     private async Task AtivarFullscreen()
     {
         await JS.InvokeVoidAsync("readerFullscreen");
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+
+            await JS.InvokeVoidAsync(
+                "readerMouseWatcher",
+                objRef);
+        }
+    }
+
+    [JSInvokable]
+    public void MostrarHeaderTemporariamente()
+    {
+        mostrarHeader = true;
+        StateHasChanged();
+
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(3000);
+
+            await InvokeAsync(() =>
+            {
+                mostrarHeader = false;
+                StateHasChanged();
+            });
+        });
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
+
 }

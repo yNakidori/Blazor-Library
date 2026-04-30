@@ -9,3 +9,18 @@
         document.exitFullscreen();
     }
 };
+
+window.readerMouseWatcher = (dotnetHelper) => {
+
+    let timer;
+
+    document.addEventListener("mousemove", () => {
+
+        clearTimeout(timer);
+
+        dotnetHelper.invokeMethodAsync(
+            "MostrarHeaderTemporariamente");
+
+        timer = setTimeout(() => { }, 3000);
+    });
+};
