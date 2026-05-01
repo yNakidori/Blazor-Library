@@ -86,4 +86,15 @@ public class LivroService
         livro.AlternarFavorito();
         await repository.AtualizarAsync(livro);
     }
+
+    public async Task RegistrarLeituraAsync(int id)
+    {
+        var livro = await repository.ObterParaEdicaoAsync(id);
+
+        if (livro == null) return;
+
+        livro.RegistrarLeitura();
+            
+            await repository.AtualizarAsync(livro);
+    }
 }

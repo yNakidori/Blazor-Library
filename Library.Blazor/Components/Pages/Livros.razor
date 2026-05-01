@@ -291,6 +291,14 @@
                                 <button class="btn btn-sm btn-outline-light">
                                     e-Reader
                                 </button>
+
+                                @if (livro.UltimaLeituraEm != null)
+                                {
+                                    <div class="small text-muted mt-2">
+                                        Continue lendo • @livro.UltimaLeituraEm.Value.ToShortDateString()
+                                    </div>
+                                }
+
                             </div>
 
                         </div>

@@ -22,6 +22,8 @@ namespace Library.Blazor.Domain.Entities
         public string? ArquivoLocal { get; private set; }
 
         public StatusLeitura StatusLeitura { get; private set; } = StatusLeitura.NaoLido;
+        public DateTime? UltimaLeituraEm { get; private set; }
+        public bool EmLeitura { get; private set; }
         public string? NotaPessoal { get; private set; }
         public bool Favorito {  get; private set; } = false;
         public DateTime DataCadastro { get; private set; } = DateTime.UtcNow;
@@ -79,6 +81,15 @@ namespace Library.Blazor.Domain.Entities
         public void DefinirDataPublicacao(DateOnly? data)
         {
             DataPublicacao = data;
+        }
+
+        public void RegistrarLeitura()
+        {
+            UltimaLeituraEm = DateTime.Now;
+            EmLeitura = true;
+
+            if (StatusLeitura == StatusLeitura.NaoLido)
+                StatusLeitura = StatusLeitura.Lendo;
         }
 
         public void DefinirArquivo(string arquivoUrl, string tipoArquivo, long tamanhoArquivo)

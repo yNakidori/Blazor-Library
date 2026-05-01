@@ -75,6 +75,8 @@
     protected override async Task OnInitializedAsync()
     {
         livro = await LivroService.ObterParaEdicaoAsync(Id);
+
+        await LivroService.RegistrarLeituraAsync(Id);
     }
 
     private void VoltarBiblioteca()
