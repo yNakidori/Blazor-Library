@@ -181,7 +181,7 @@
                                             Arquivo do Livro
                                         </label>
 
-                                        <InputFile OnChange="UploadArquivoLivro"
+                                        <InputFile OnChange="SelecionarArquivo"
                                                    accept=".epub,.pdf,.mobi,.azw3"
                                                    class="form-control" />
 
@@ -189,6 +189,19 @@
                                         {
                                             <div class="small text-muted mt-2">
                                                 Arquivo atual: @arquivoNome
+                                            </div>
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger mt-2"
+                                                    @onclick="RemoverArquivoLivro">
+                                                Remover Arquivo
+                                            </button>
+                                        }
+
+                                        @if (arquivoPendente != null)
+                                        {
+                                            <div class="small text-warning mt-1">
+                                                Novo arquivo selecionado: @arquivoPendente.Name
                                             </div>
                                         }
 
@@ -379,6 +392,9 @@
         mensagemArquivo = "";
         mensagemBusca = "";
 
+        arquivoPendente = null;
+        arquivoAlterado = false;
+
         resultadosBusca.Clear();
     }
 
@@ -405,12 +421,19 @@
                     Idioma = novoLivro.Idioma,
                     DataPublicacao = novoLivro.DataPublicacao,
                     CapaUrl = novoLivro.CapaUrl
-                });
+                }
+            );
+
+            if (arquivoAlterado)
+            {
+                await UploadArquivoLivro();
+            }
         }
         else
         {
             await LivroService.AdicionarAsync(novoLivro);
         }
+
 
         livros = await LivroService.ObterTodosAsync();
 
@@ -420,6 +443,17 @@
     private async Task RemoverLivro(int id)
     {
         await LivroService.RemoverAsync(id);
+        livros = await LivroService.ObterTodosAsync();
+    }
+
+    private async Task RemoverArquivoLivro()
+    {
+        await LivroService.RemoverArquivoAsync(livroEditandoId);
+
+        arquivoNome = "";
+        arquivoPendente = null;
+        arquivoAlterado = false;
+
         livros = await LivroService.ObterTodosAsync();
     }
 
@@ -550,16 +584,29 @@
         arquivoNome = string.IsNullOrWhiteSpace(livro.ArquivoUrl)
         ? ""
         : Path.GetFileName(livro.ArquivoUrl);
+
+        editContext = new EditContext(novoLivro);
     }
 
-    private async Task UploadArquivoLivro(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
+    private IBrowserFile? arquivoPendente;
+    private bool arquivoAlterado;
 
-        if (file == null)
+    private Task SelecionarArquivo(InputFileChangeEventArgs e)
+    {
+        arquivoPendente = e.File;
+        arquivoAlterado = true;
+
+        mensagemArquivo = $"Arquivo pendente: {e.File.Name}";
+
+        return Task.CompletedTask;
+    }
+
+    private async Task UploadArquivoLivro()
+    {
+        if (arquivoPendente == null)
             return;
 
-        var extensao = Path.GetExtension(file.Name);
+        var extensao = Path.GetExtension(arquivoPendente.Name);
 
         var nome = $"{Guid.NewGuid()}{extensao}";
 
@@ -574,22 +621,24 @@
 
         var caminhoCompleto = Path.Combine(pasta, nome);
 
-        await using var stream = file.OpenReadStream(50 * 1024 * 1024);
+        await using var stream = arquivoPendente.OpenReadStream(50 * 1024 * 1024);
 
         await using var fs = new FileStream(caminhoCompleto, FileMode.Create);
 
         await stream.CopyToAsync(fs);
 
         await LivroService.DefinirArquivoAsync(
-        livroEditandoId,
-        $"/uploads/books/{nome}",
-        extensao,
-        file.Size);
+            livroEditandoId,
+            $"/uploads/books/{nome}",
+            extensao,
+            arquivoPendente.Size);
 
-        arquivoNome = file.Name;
+        arquivoNome = arquivoPendente.Name;
 
-        livros = await LivroService.ObterTodosAsync();
+        arquivoPendente = null;
+        arquivoAlterado = false;
 
         mensagemArquivo = "Arquivo anexado com sucesso.";
     }
+
 }

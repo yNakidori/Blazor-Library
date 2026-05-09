@@ -66,7 +66,7 @@ public class LivroService
 
         livro.DefinirArquivo(url, tipo, tamanho);
 
-        await repository.AdicionarAsync(livro);
+        await repository.AtualizarAsync(livro);
     }
 
     // Delete
@@ -75,7 +75,49 @@ public class LivroService
         var livro = await repository.ObterParaEdicaoAsync(id);
         if (livro == null) return;
 
+        if (!string.IsNullOrWhiteSpace(livro.ArquivoUrl))
+        {
+            var caminhoFisico = Path.Combine(
+                Environment.CurrentDirectory,
+                "wwwroot",
+                livro.ArquivoUrl.TrimStart('/')
+                    .Replace("/", Path.DirectorySeparatorChar.ToString())
+            );
+
+            if (File.Exists(caminhoFisico))
+            {
+                File.Delete(caminhoFisico);
+            }
+        }
+
         await repository.RemoverAsync(livro);
+    }
+
+    public async Task RemoverArquivoAsync(int id)
+    {
+        var livro = await repository.ObterParaEdicaoAsync(id);
+
+        if (livro == null)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(livro.ArquivoUrl))
+        {
+            var caminhoFisico = Path.Combine(
+                Environment.CurrentDirectory,
+                "wwwroot",
+                livro.ArquivoUrl.TrimStart('/')
+                .Replace("/", Path.DirectorySeparatorChar.ToString())
+            );
+
+            if (File.Exists(caminhoFisico))
+            {
+                File.Delete(caminhoFisico);
+            }
+        }
+
+        livro.RemoverArquivo();
+
+        await repository.AtualizarAsync(livro);
     }
 
     public async Task AlternarFavoritoAsync(int id)

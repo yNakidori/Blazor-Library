@@ -98,5 +98,12 @@ namespace Library.Blazor.Domain.Entities
             TipoArquivo = tipoArquivo;
             TamanhoArquivo = tamanhoArquivo;
         }
+
+        public void RemoverArquivo()
+        {
+            ArquivoUrl = null;
+            TipoArquivo = null;
+            TamanhoArquivo = null;
+        }
     }
 }
