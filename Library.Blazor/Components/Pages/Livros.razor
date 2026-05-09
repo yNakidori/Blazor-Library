@@ -42,8 +42,10 @@
 
                 <div class="modal-body-custom">
 
-                    <EditForm Model="novoLivro"
+                    <EditForm EditContext="editContext"
                               OnValidSubmit="SalvarLivro">
+
+                              <DataAnnotationsValidator />
 
                         <div class="row g-4 align-items-start">
 
@@ -83,7 +85,7 @@
                                     <div class="d-flex gap-2">
                                         <InputText class="form-control"
                                                    @bind-Value="novoLivro.Titulo" />
-
+                                   
                                         <button type="button"
                                                 class="btn btn-outline-primary"
                                                 @onclick="BuscarMetadata"
@@ -143,6 +145,9 @@
                                     <label class="form-label">Autor</label>
                                     <InputText class="form-control"
                                                @bind-Value="novoLivro.Autor" />
+
+                                               
+                                    <ValidationMessage For="@(() => novoLivro.Autor)" />
                                 </div>
 
                                 <div class="row g-3">
@@ -340,6 +345,7 @@
     private bool mostrarFormulario = false;
 
     private CriarLivroDto novoLivro = new();
+    private EditContext? editContext;
 
     private string arquivoNome = "";
     private string mensagemArquivo = "";
@@ -347,10 +353,16 @@
     protected override async Task OnInitializedAsync()
     {
         livros = await LivroService.ObterTodosAsync();
+
+        editContext = new EditContext(novoLivro);
     }
 
     private void MostrarFormulario()
     {
+        novoLivro = new CriarLivroDto();
+
+        editContext = new EditContext(novoLivro);
+
         mostrarFormulario = true;
     }
 
@@ -459,6 +471,12 @@
             novoLivro.Titulo = item.Titulo;
             novoLivro.Autor = item.Autor;
             novoLivro.CapaUrl = item.CapaUrl;
+
+            editContext?.NotifyFieldChanged(
+            FieldIdentifier.Create(() => novoLivro.Autor));
+
+            editContext?.NotifyFieldChanged(
+            FieldIdentifier.Create(() => novoLivro.Titulo));
 
             if (dados != null)
             {

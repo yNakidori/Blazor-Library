@@ -72,7 +72,7 @@ public class LivroService
     // Delete
     public async Task RemoverAsync(int id)
     {
-        var livro = await repository.ObterPorIdAsync(id);
+        var livro = await repository.ObterParaEdicaoAsync(id);
         if (livro == null) return;
 
         await repository.RemoverAsync(livro);
