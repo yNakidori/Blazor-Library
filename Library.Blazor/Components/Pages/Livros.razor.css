@@ -144,6 +144,33 @@
     width: 100%;
 }
 
+.card-action-btn {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #e5e7eb;
+    border-radius: 8px;
+    font-size: .78rem;
+    font-weight: 500;
+    transition: background .15s ease;
+}
+
+    .card-action-btn:hover {
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+    }
+
+.card-action-primary {
+    background: rgba(99,102,241,0.25);
+    border-color: rgba(99,102,241,0.5);
+    color: #a5b4fc;
+}
+
+    .card-action-primary:hover {
+        background: rgba(99,102,241,0.4);
+        color: #c7d2fe;
+    }
+
 .book-status {
     text-align: center;
 }
