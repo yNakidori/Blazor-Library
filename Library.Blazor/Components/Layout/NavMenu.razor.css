@@ -3,7 +3,8 @@
     padding: 28px 18px;
     display: flex;
     flex-direction: column;
-    background: #46412e;
+    background: #f4f2ee;
+    border-right: 1px solid #e0dccf;
 }
 
 .brand {
@@ -16,12 +17,13 @@
 
 .brand-icon {
     font-size: 1.6rem;
+    color: #9c4a3c;
 }
 
 .brand-text {
     font-size: 2rem;
     font-weight: 800;
-    color: #f8fafc;
+    color: #2b2620;
     letter-spacing: -1px;
 }
 
@@ -36,24 +38,26 @@
     align-items: center;
     gap: 12px;
     padding: 14px 16px;
-    border-radius: 14px;
-    color: #94a3b8 !important;
+    border-radius: 10px;
+    color: #6b6356 !important;
     text-decoration: none !important;
     font-weight: 600;
-    transition: all .18s ease;
+    transition: background .18s ease, color .18s ease;
 }
 
     .menu-item:hover {
-        background: rgba(255,255,255,.04);
-        color: #fff !important;
+        background: #ece8df;
+        color: #2b2620 !important;
     }
 
     .menu-item.active {
-        background: #1e293b;
-        color: #fff !important;
+        background: #e4ded0;
+        color: #2b2620 !important;
+        box-shadow: inset 3px 0 0 #9c4a3c;
     }
 
 .menu-icon {
     width: 22px;
     text-align: center;
+    color: inherit;
 }

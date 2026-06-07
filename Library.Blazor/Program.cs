@@ -23,6 +23,8 @@ builder.Services.AddScoped<LivroService>();
 builder.Services.AddScoped<OpenLibraryService>();
 builder.Services.AddScoped(sp => new HttpClient());
 
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { { options.DetailedErrors = true; } });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

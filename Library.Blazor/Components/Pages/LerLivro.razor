@@ -1,7 +1,7 @@
 ﻿@page "/livros/ler/{Id:int}"
 @rendermode InteractiveServer
 
-@implements IDisposable
+@implements IAsyncDisposable
 
 @using Library.Blazor.Domain.Entities
 @using Library.Blazor.Domain.Services
@@ -66,6 +66,9 @@
 
     private DotNetObjectReference<LerLivro>? objRef;
 
+    private CancellationTokenSource? headerCts;
+    private bool _disposed;
+
     protected override async Task OnInitializedAsync()
     {
         livro = await LivroService.ObterParaEdicaoAsync(Id);
@@ -103,31 +106,44 @@
     [JSInvokable]
     public void MostrarHeaderTemporariamente()
     {
-        mostrarHeader = true;
-        StateHasChanged();
+        if (_disposed) return;
+
+        if (!mostrarHeader)
+        {
+            mostrarHeader = true;
+            StateHasChanged();
+        }
+
+        headerCts?.Cancel();
+        headerCts = new CancellationTokenSource();
+        var token = headerCts.Token;
 
         _ = Task.Run(async () =>
         {
-            await Task.Delay(3000);
-
-            await InvokeAsync(() =>
+            try
             {
-                mostrarHeader = false;
-                StateHasChanged();
-            });
+                await Task.Delay(3000, token);
+                if (_disposed) return;
+                await InvokeAsync(() =>
+                {
+                    if (_disposed) return;
+                    mostrarHeader = false;
+                    StateHasChanged();
+                });
+            }
+            catch (TaskCanceledException) { }
+            catch (ObjectDisposedException) { }
         });
     }
 
-    public async void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        try
-        {
-            await JS.InvokeVoidAsync("pdfViewerDestroy");
-        }
-        catch
-        {
+        _disposed = true;
+        headerCts?.Cancel();
+        headerCts?.Dispose();
 
-        }
+        try { await JS.InvokeVoidAsync("readerDestroy"); } catch { }
+
         objRef?.Dispose();
     }
 

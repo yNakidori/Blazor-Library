@@ -11,22 +11,20 @@
 };
 
 window.readerMouseWatcher = (dotnetHelper) => {
-
-    let timer;
+    let lastCall = 0;
+    const THROTTLE_MS = 250;
 
     document.addEventListener("mousemove", () => {
+        const now = Date.now();
+        if (now - lastCall < THROTTLE_MS) return;
+        lastCall = now;
 
-        clearTimeout(timer);
-
-        dotnetHelper.invokeMethodAsync(
-            "MostrarHeaderTemporariamente");
-
-        timer = setTimeout(() => { }, 3000);
+        dotnetHelper.invokeMethodAsync("MostrarHeaderTemporariamente");
     });
 };
 
 window._ensurePdfJs = async (pdfJsUrl) => {
-    if (window.pdfJsLib) return;
+    if (window.pdfjsLib) return;
     return new Promise((resolve, reject) => {
         const s = document.createElement('script');
         s.src = pdfJsUrl;
